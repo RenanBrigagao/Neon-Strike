@@ -1,6 +1,5 @@
 import pygame
 
-print('Setup Start')
 pygame.init()
 screen = pygame.display.set_mode(size=(1000, 800))
 
