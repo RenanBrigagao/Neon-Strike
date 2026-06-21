@@ -1,9 +1,49 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import pygame
+from pygame.font import Font
+from pygame.rect import Rect
+from pygame.surface import Surface
+
+from Code.const import WIN_WIDTH, COLOR_WHITE, MENU_OPTION, COLOR_PINK
+
 
 class Menu:
     def __init__(self, screen):
         self.screen = screen
+        self.surf = pygame.image.load('./asset/MenuBg.png')
+        self.rect = self.surf.get_rect(left=0, top=0)
 
     def run(self, ):
-        pass
+        pygame.mixer_music.load('./asset/Menu.wav')
+        pygame.mixer_music.play(-1)
+        while True:
+            self.screen.blit(source=self.surf, dest=self.rect)
+
+            menu_bg = pygame.Surface((340, 180), pygame.SRCALPHA)
+            menu_bg.fill((0, 0, 0, 180))  # preto com transparência
+
+            self.screen.blit(menu_bg, (WIN_WIDTH // 2 - 170, 140))
+            pygame.draw.rect(
+                self.screen,
+                COLOR_PINK,
+                (WIN_WIDTH // 2 - 170, 140, 340, 180),
+                2
+            )
+
+            self.menu_text(50, "Neon Strike", COLOR_WHITE, ((WIN_WIDTH / 2), 50))
+
+            for i in range(len(MENU_OPTION)):
+                self.menu_text(20, MENU_OPTION[i], COLOR_WHITE, ((WIN_WIDTH / 2), 170 + 30 * i))
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()  # Close Screen
+                    quit()  # End
+
+    def menu_text(self, text_size: int, text: str, text_color: tuple, text_center_pos: tuple):
+        text_font: Font = pygame.font.SysFont(name="Lucida Sans Typewriter", size=text_size)
+        text_surf: Surface = text_font.render(text, True, text_color).convert_alpha()
+        text_rect: Rect = text_surf.get_rect(center=text_center_pos)
+        self.screen.blit(source=text_surf, dest=text_rect)
